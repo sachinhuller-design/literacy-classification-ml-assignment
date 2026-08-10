@@ -1,0 +1,5 @@
+Public dataset reference:
+https://www.kaggle.com/datasets/sanlavisingh/education-dataset-csv-23-72-kb
+
+The packaged literacy_classification.csv is a prepared/derived dataset for the project workflow.
+It is not a redistribution of the Kaggle original file.

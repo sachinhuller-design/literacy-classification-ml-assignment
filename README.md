@@ -6,7 +6,7 @@ This project treats literacy level as a **3-class classification problem**: Low,
 
 ## 2. Dataset description
 
-The assignment requires a public classification dataset with at least 12 features and 500 instances. The project uses an education/student-performance dataset concept from Kaggle as the basis and prepares a literacy-classification version.
+The project uses an education/student-performance dataset concept from Kaggle as the basis and prepares a literacy-classification version.
 
 **Important:** `literacy_classification.csv` in this package is a **prepared/derived learning dataset**, not the original Kaggle download. The target `Literacy_Level` is constructed from reading performance:
 - Low: reading score < 60
@@ -100,6 +100,3 @@ The app includes:
 4. Confusion matrix
 5. Classification report
 6. Prediction table
-
-
-Source assignment: ML Assignment - 2, M.Tech (AIML/DSE), submission deadline 18-Aug-2026.

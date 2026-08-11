@@ -1,4 +1,4 @@
-# Literacy Level Classification – ML Assignment 2
+# Literacy Level Classification
 
 ## 1. Problem statement
 
@@ -22,6 +22,10 @@ The source dataset is described as containing 500 student records and education-
 
 ## 3. Repository contents
 
+GITHUB Link: https://github.com/sachinhuller-design/literacy-classification-ml-assignment
+
+Repository structure
+
 ```text
 literacy_classification_project/
 ├── app.py
@@ -42,7 +46,7 @@ literacy_classification_project/
 
 ## 4. Models used
 
-The assignment document specifies five model rows in its comparison table: Logistic Regression, Decision Tree, kNN, Naive Bayes and Random Forest.
+The model specifies five model rows in its comparison table: Logistic Regression, Decision Tree, kNN, Naive Bayes and Random Forest.
 
 ### Model comparison from the prepared 80/20 stratified split
 
@@ -87,7 +91,8 @@ streamlit run app.py
 The browser should open the Streamlit interface.
 
 ## 7. Streamlit features
-
+Link to Streamlit app in https://literacy-level-classification.streamlit.app/
+Virtual machine: http://localhost:8501/
 The app includes:
 1. CSV upload
 2. Model-selection dropdown
@@ -96,29 +101,5 @@ The app includes:
 5. Classification report
 6. Prediction table
 
-## 8. GitHub deployment
-
-Push all project files to GitHub, then create a Streamlit Community Cloud app using `app.py` as the entry point.
-
-The assignment requires a GitHub repository link and a live Streamlit link in the final PDF.
-
-## 9. Academic integrity
-
-The assignment explicitly states that AI tools may be used for learning support but not for direct copy-paste submission. Customize variable names, UI text, README wording, analysis and screenshots, and understand the code before submission.
-
-## 10. Assignment alignment
-
-The supplied assignment requires:
-- a public classification dataset;
-- minimum 12 features and 500 instances;
-- five listed classification models;
-- six evaluation metrics;
-- GitHub repository;
-- `requirements.txt`;
-- `README.md`;
-- test CSV;
-- saved model files;
-- Streamlit app with CSV upload, model selection, metrics and confusion matrix/classification report;
-- BITS Virtual Lab execution screenshot.
 
 Source assignment: ML Assignment - 2, M.Tech (AIML/DSE), submission deadline 18-Aug-2026.

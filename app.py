@@ -49,7 +49,7 @@ pred = model.predict(X)
 st.subheader("Predictions")
 out = X.copy()
 out["Predicted_Literacy_Level"] = pred
-st.dataframe(out.head(20), use_container_width=True)
+st.dataframe(out, use_container_width=True)
 
 if has_target:
     y_true = data[target].astype(str)

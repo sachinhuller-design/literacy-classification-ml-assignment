@@ -6,95 +6,116 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sklearn.metrics import (
-    accuracy_score, roc_auc_score, precision_score, recall_score,
-    f1_score, matthews_corrcoef, confusion_matrix, classification_report
+    accuracy_score, roc_auc_score, precision_score,
+    recall_score, f1_score, matthews_corrcoef,
+    confusion_matrix, classification_report
 )
 
 # ============================================================
-# PAGE CONFIGURATION
+# PAGE CONFIG
 # ============================================================
 
 st.set_page_config(
     page_title="Literacy Classification",
     page_icon="📚",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ============================================================
-# CUSTOM CSS - DECORATION
+# LIGHT PROFESSIONAL UI
 # ============================================================
 
 st.markdown("""
 <style>
 
-    /* Main background */
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e8eef7 100%);
-    }
+.stApp {
+    background-color: #f8fafc;
+}
 
-    /* Main title */
-    .main-title {
-        font-size: 42px;
-        font-weight: 800;
-        text-align: center;
-        color: #1f3c88;
-        margin-bottom: 5px;
-    }
+.main-title {
+    font-size: 38px;
+    font-weight: 700;
+    text-align: center;
+    color: #334155;
+    margin-bottom: 5px;
+}
 
-    .subtitle {
-        text-align: center;
-        font-size: 18px;
-        color: #5c677d;
-        margin-bottom: 30px;
-    }
+.subtitle {
+    text-align: center;
+    font-size: 17px;
+    color: #64748b;
+    margin-bottom: 25px;
+}
 
-    /* Section headers */
-    .section-title {
-        font-size: 26px;
-        font-weight: 700;
-        color: #1f3c88;
-        margin-top: 25px;
-        margin-bottom: 15px;
-    }
+.section-title {
+    font-size: 25px;
+    font-weight: 650;
+    color: #475569;
+    margin-top: 28px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+}
 
-    /* Cards */
-    .info-card {
-        background: white;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        border-left: 5px solid #1f77b4;
-        margin-bottom: 15px;
-    }
+.info-card {
+    background-color: white;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #cbd5e1;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.05);
+    color: #475569;
+}
 
-    .metric-card {
-        background: white;
-        padding: 15px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    }
+section[data-testid="stSidebar"] {
+    background-color: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #172554 0%, #1e3a8a 100%);
-    }
+section[data-testid="stSidebar"] * {
+    color: #475569 !important;
+}
 
-    section[data-testid="stSidebar"] * {
-        color: white !important;
-    }
+div[data-testid="stMetric"] {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+}
 
-    /* Buttons */
-    .stButton > button {
-        border-radius: 10px;
-        font-weight: 600;
-    }
+div[data-testid="stMetricLabel"] {
+    color: #64748b !important;
+}
 
-    /* Dataframes */
-    .stDataFrame {
-        border-radius: 10px;
-    }
+div[data-testid="stMetricValue"] {
+    color: #334155 !important;
+}
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+[ data-testid="stFileUploader"] {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+div[data-baseweb="select"] > div {
+    background-color: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.stButton > button {
+    background-color: white;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-weight: 600;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -137,7 +158,7 @@ MODEL_FILES = {
     "Decision Tree": "decision_tree.joblib",
     "kNN": "knn.joblib",
     "Naive Bayes": "naive_bayes.joblib",
-    "Random Forest": "random_forest.joblib",
+    "Random Forest": "random_forest.joblib"
 }
 
 
@@ -161,8 +182,6 @@ selected = st.sidebar.selectbox(
     list(MODEL_FILES.keys())
 )
 
-st.sidebar.markdown("---")
-
 uploaded = st.sidebar.file_uploader(
     "📂 Upload Test CSV",
     type=["csv"]
@@ -180,11 +199,9 @@ st.sidebar.markdown("""
 - Random Forest
 """)
 
-st.sidebar.markdown("---")
-
 st.sidebar.info(
-    "💡 Upload a labeled CSV containing `Literacy_Level` "
-    "to calculate evaluation metrics."
+    "Upload a labeled CSV containing "
+    "`Literacy_Level` to calculate evaluation metrics."
 )
 
 
@@ -192,86 +209,86 @@ st.sidebar.info(
 # MODEL COMPARISON
 # ============================================================
 
-metrics_path = os.path.join(MODEL_DIR, "metrics.csv")
+metrics_path = os.path.join(
+    MODEL_DIR,
+    "metrics.csv"
+)
 
 if os.path.exists(metrics_path):
 
     metrics = pd.read_csv(metrics_path)
 
     st.markdown(
-        '<div class="section-title">🏆 Model Performance Comparison</div>',
+        '<div class="section-title">'
+        '🏆 Model Performance Comparison'
+        '</div>',
         unsafe_allow_html=True
     )
 
     # --------------------------------------------------------
-    # Find best model
+    # BEST MODEL
     # --------------------------------------------------------
 
     if "Accuracy" in metrics.columns:
 
         best_idx = metrics["Accuracy"].idxmax()
-        best_model = metrics.loc[best_idx, "Model"]
-        best_accuracy = metrics.loc[best_idx, "Accuracy"]
 
-        col1, col2, col3 = st.columns(3)
+        best_model = metrics.loc[
+            best_idx, "Model"
+        ]
 
-        with col1:
-            st.metric(
-                "🏆 Best Model",
-                str(best_model)
-            )
+        best_accuracy = metrics.loc[
+            best_idx, "Accuracy"
+        ]
 
-        with col2:
-            st.metric(
-                "🎯 Best Accuracy",
-                f"{best_accuracy:.4f}"
-            )
+        c1, c2, c3 = st.columns(3)
 
-        with col3:
-            st.metric(
-                "🤖 Models Compared",
-                len(metrics)
-            )
+        c1.metric(
+            "🏆 Best Model",
+            best_model
+        )
+
+        c2.metric(
+            "🎯 Best Accuracy",
+            f"{best_accuracy:.4f}"
+        )
+
+        c3.metric(
+            "🤖 Models Compared",
+            len(metrics)
+        )
 
     # --------------------------------------------------------
-    # Metrics Table
+    # METRICS TABLE
     # --------------------------------------------------------
 
     st.subheader("📋 Detailed Model Metrics")
 
     numeric_cols = [
         c for c in metrics.columns
-        if c != "Model" and pd.api.types.is_numeric_dtype(metrics[c])
+        if c != "Model" and
+        pd.api.types.is_numeric_dtype(metrics[c])
     ]
 
-    format_dict = {
-        c: "{:.4f}" for c in numeric_cols
-    }
-
     st.dataframe(
-        metrics.style.format(format_dict),
+        metrics.style.format(
+            {c: "{:.4f}" for c in numeric_cols}
+        ),
         use_container_width=True,
         hide_index=True
     )
 
     # ========================================================
-    # PLOTS
+    # ACCURACY PLOT
     # ========================================================
-
-    st.markdown(
-        '<div class="section-title">📊 Visual Model Comparison</div>',
-        unsafe_allow_html=True
-    )
-
-    # --------------------------------------------------------
-    # Plot 1 - Accuracy
-    # --------------------------------------------------------
 
     if "Accuracy" in metrics.columns:
 
         st.subheader("🎯 Accuracy Comparison")
 
         fig, ax = plt.subplots(figsize=(10, 5))
+        fig.patch.set_facecolor("white")
+        ax.set_facecolor("white")
 
         sns.barplot(
             data=metrics,
@@ -281,9 +298,12 @@ if os.path.exists(metrics_path):
         )
 
         ax.set_ylim(0, 1.05)
+        ax.set_title(
+            "Accuracy of Classification Models",
+            color="#475569"
+        )
         ax.set_ylabel("Accuracy")
         ax.set_xlabel("Model")
-        ax.set_title("Accuracy of Different Classification Models")
 
         plt.xticks(rotation=25)
 
@@ -294,28 +314,32 @@ if os.path.exists(metrics_path):
                 padding=3
             )
 
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+
         plt.tight_layout()
-
         st.pyplot(fig)
-
         plt.close(fig)
 
-    # --------------------------------------------------------
-    # Plot 2 - Precision Recall F1
-    # --------------------------------------------------------
+    # ========================================================
+    # PRECISION / RECALL / F1
+    # ========================================================
 
-    available_prf = [
-        c for c in ["Precision", "Recall", "F1"]
+    prf_cols = [
+        c for c in
+        ["Precision", "Recall", "F1"]
         if c in metrics.columns
     ]
 
-    if len(available_prf) > 0:
+    if prf_cols:
 
-        st.subheader("📈 Precision, Recall & F1 Comparison")
+        st.subheader(
+            "📈 Precision, Recall & F1 Comparison"
+        )
 
         melted = metrics.melt(
             id_vars="Model",
-            value_vars=available_prf,
+            value_vars=prf_cols,
             var_name="Metric",
             value_name="Score"
         )
@@ -331,9 +355,12 @@ if os.path.exists(metrics_path):
         )
 
         ax.set_ylim(0, 1.05)
+
         ax.set_title(
-            "Precision, Recall and F1 Score Comparison"
+            "Precision, Recall and F1 Score",
+            color="#475569"
         )
+
         ax.set_ylabel("Score")
         ax.set_xlabel("Model")
 
@@ -341,12 +368,11 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
-
         plt.close(fig)
 
-    # --------------------------------------------------------
-    # Plot 3 - AUC
-    # --------------------------------------------------------
+    # ========================================================
+    # AUC
+    # ========================================================
 
     if "AUC" in metrics.columns:
 
@@ -362,9 +388,14 @@ if os.path.exists(metrics_path):
         )
 
         ax.set_ylim(0, 1.05)
+
+        ax.set_title(
+            "ROC-AUC Score Comparison",
+            color="#475569"
+        )
+
         ax.set_ylabel("ROC-AUC")
         ax.set_xlabel("Model")
-        ax.set_title("ROC-AUC Score Comparison")
 
         plt.xticks(rotation=25)
 
@@ -378,16 +409,17 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
-
         plt.close(fig)
 
-    # --------------------------------------------------------
-    # Plot 4 - MCC
-    # --------------------------------------------------------
+    # ========================================================
+    # MCC
+    # ========================================================
 
     if "MCC" in metrics.columns:
 
-        st.subheader("🎯 Matthews Correlation Coefficient")
+        st.subheader(
+            "🎯 Matthews Correlation Coefficient"
+        )
 
         fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -398,11 +430,13 @@ if os.path.exists(metrics_path):
             ax=ax
         )
 
+        ax.set_title(
+            "MCC Comparison",
+            color="#475569"
+        )
+
         ax.set_ylabel("MCC")
         ax.set_xlabel("Model")
-        ax.set_title(
-            "Matthews Correlation Coefficient Comparison"
-        )
 
         plt.xticks(rotation=25)
 
@@ -416,15 +450,12 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
-
         plt.close(fig)
-
 
 else:
 
     st.warning(
-        "⚠️ metrics.csv was not found in the model folder. "
-        "Model comparison charts cannot be displayed."
+        "⚠️ metrics.csv was not found in the model folder."
     )
 
 
@@ -432,37 +463,34 @@ else:
 # LOAD DATA
 # ============================================================
 
-target = "Literacy_Level"
-
 default_path = "test_data.csv"
+target = "Literacy_Level"
 
 if uploaded is not None:
 
     data = pd.read_csv(uploaded)
 
     st.success(
-        f"✅ Uploaded dataset loaded successfully: "
+        f"✅ Dataset loaded: "
         f"{data.shape[0]} rows × {data.shape[1]} columns"
+    )
+
+elif os.path.exists(default_path):
+
+    data = pd.read_csv(default_path)
+
+    st.info(
+        f"📁 Using default dataset: {default_path}"
     )
 
 else:
 
-    if os.path.exists(default_path):
+    st.error(
+        "❌ test_data.csv not found. "
+        "Please upload a CSV file."
+    )
 
-        data = pd.read_csv(default_path)
-
-        st.info(
-            f"📁 Using default dataset: {default_path}"
-        )
-
-    else:
-
-        st.error(
-            "❌ test_data.csv was not found. "
-            "Please upload a test CSV file."
-        )
-
-        st.stop()
+    st.stop()
 
 
 # ============================================================
@@ -470,33 +498,33 @@ else:
 # ============================================================
 
 st.markdown(
-    '<div class="section-title">📄 Dataset Information</div>',
+    '<div class="section-title">'
+    '📄 Dataset Information'
+    '</div>',
     unsafe_allow_html=True
 )
 
-info1, info2, info3 = st.columns(3)
+c1, c2, c3 = st.columns(3)
 
-with info1:
-    st.metric(
-        "📌 Number of Rows",
-        data.shape[0]
-    )
+c1.metric(
+    "📌 Rows",
+    data.shape[0]
+)
 
-with info2:
-    st.metric(
-        "📊 Number of Features",
-        data.shape[1] - (1 if target in data.columns else 0)
-    )
+c2.metric(
+    "📊 Features",
+    data.shape[1] -
+    (1 if target in data.columns else 0)
+)
 
-with info3:
-    st.metric(
-        "🎯 Target Available",
-        "Yes" if target in data.columns else "No"
-    )
+c3.metric(
+    "🎯 Target Available",
+    "Yes" if target in data.columns else "No"
+)
 
 
 # ============================================================
-# PREPARE FEATURES
+# PREPARE DATA
 # ============================================================
 
 has_target = target in data.columns
@@ -523,11 +551,13 @@ pred = model.predict(X)
 
 
 # ============================================================
-# PREDICTIONS
+# PREDICTIONS TABLE
 # ============================================================
 
 st.markdown(
-    '<div class="section-title">🔮 Literacy Level Predictions</div>',
+    '<div class="section-title">'
+    '🔮 Literacy Level Predictions'
+    '</div>',
     unsafe_allow_html=True
 )
 
@@ -550,16 +580,14 @@ if has_target:
 
     y_true = data[target].astype(str)
 
-    # Make prediction labels strings for safe comparison
     pred = pd.Series(pred).astype(str).values
 
     proba = model.predict_proba(X)
 
-    # --------------------------------------------------------
-    # Calculate metrics
-    # --------------------------------------------------------
-
-    accuracy = accuracy_score(y_true, pred)
+    accuracy = accuracy_score(
+        y_true,
+        pred
+    )
 
     auc = roc_auc_score(
         y_true,
@@ -594,25 +622,50 @@ if has_target:
         pred
     )
 
+
     # ========================================================
     # EVALUATION METRICS
     # ========================================================
 
     st.markdown(
-        '<div class="section-title">📊 Evaluation on Test Data</div>',
+        '<div class="section-title">'
+        '📊 Evaluation on Test Data'
+        '</div>',
         unsafe_allow_html=True
     )
 
-    col1, col2, col3 = st.columns(3)
-    col4, col5, col6 = st.columns(3)
+    c1, c2, c3 = st.columns(3)
+    c4, c5, c6 = st.columns(3)
 
-    col1.metric("🎯 Accuracy", f"{accuracy:.4f}")
-    col2.metric("📈 AUC", f"{auc:.4f}")
-    col3.metric("🔵 Precision", f"{precision:.4f}")
+    c1.metric(
+        "🎯 Accuracy",
+        f"{accuracy:.4f}"
+    )
 
-    col4.metric("🟢 Recall", f"{recall:.4f}")
-    col5.metric("⭐ F1 Score", f"{f1:.4f}")
-    col6.metric("🎯 MCC", f"{mcc:.4f}")
+    c2.metric(
+        "📈 AUC",
+        f"{auc:.4f}"
+    )
+
+    c3.metric(
+        "🔵 Precision",
+        f"{precision:.4f}"
+    )
+
+    c4.metric(
+        "🟢 Recall",
+        f"{recall:.4f}"
+    )
+
+    c5.metric(
+        "⭐ F1 Score",
+        f"{f1:.4f}"
+    )
+
+    c6.metric(
+        "🎯 MCC",
+        f"{mcc:.4f}"
+    )
 
 
     # ========================================================
@@ -620,7 +673,9 @@ if has_target:
     # ========================================================
 
     st.markdown(
-        '<div class="section-title">🔥 Confusion Matrix</div>',
+        '<div class="section-title">'
+        '🔥 Confusion Matrix'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -630,7 +685,9 @@ if has_target:
         labels=model.classes_
     )
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(
+        figsize=(8, 6)
+    )
 
     sns.heatmap(
         cm,
@@ -639,13 +696,22 @@ if has_target:
         cmap="Blues",
         xticklabels=model.classes_,
         yticklabels=model.classes_,
+        linewidths=0.5,
+        linecolor="#e2e8f0",
         ax=ax
     )
 
-    ax.set_xlabel("Predicted Literacy Level")
-    ax.set_ylabel("Actual Literacy Level")
+    ax.set_xlabel(
+        "Predicted Literacy Level"
+    )
+
+    ax.set_ylabel(
+        "Actual Literacy Level"
+    )
+
     ax.set_title(
-        f"Confusion Matrix - {selected}"
+        f"Confusion Matrix - {selected}",
+        color="#475569"
     )
 
     plt.tight_layout()
@@ -660,7 +726,9 @@ if has_target:
     # ========================================================
 
     st.markdown(
-        '<div class="section-title">📋 Classification Report</div>',
+        '<div class="section-title">'
+        '📋 Classification Report'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -671,7 +739,9 @@ if has_target:
         zero_division=0
     )
 
-    report_df = pd.DataFrame(report).T.round(4)
+    report_df = pd.DataFrame(
+        report
+    ).T.round(4)
 
     st.dataframe(
         report_df,
@@ -684,7 +754,9 @@ if has_target:
     # ========================================================
 
     st.markdown(
-        '<div class="section-title">🔍 Actual vs Predicted Literacy Level</div>',
+        '<div class="section-title">'
+        '🔍 Actual vs Predicted'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -708,13 +780,12 @@ if has_target:
         hide_index=True
     )
 
-
 else:
 
     st.info(
-        "ℹ️ No Literacy_Level column was supplied, so only "
-        "predictions are shown. Upload a labeled test CSV to "
-        "display evaluation metrics."
+        "ℹ️ No Literacy_Level column was supplied. "
+        "Only predictions are shown. Upload a labeled "
+        "test CSV to display evaluation metrics."
     )
 
 
@@ -725,9 +796,14 @@ else:
 st.markdown("---")
 
 st.markdown("""
-<div style="text-align:center; padding:20px; color:#6b7280;">
-    <b>📚 Literacy Level Classification System</b><br>
-    Machine Learning Classification Project<br>
-    Logistic Regression • Decision Tree • kNN • Naive Bayes • Random Forest
+<div style="
+text-align:center;
+padding:20px;
+color:#94a3b8;
+font-size:14px;
+">
+<b>📚 Literacy Level Classification System</b><br>
+Machine Learning Classification Project<br>
+Logistic Regression • Decision Tree • kNN • Naive Bayes • Random Forest
 </div>
 """, unsafe_allow_html=True)

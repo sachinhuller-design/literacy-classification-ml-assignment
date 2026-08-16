@@ -24,104 +24,96 @@ st.set_page_config(
 )
 
 
-# Page styling
+# Page design
 st.markdown("""
 <style>
 
 .stApp {
-    background-color: #fffdf5;
+    background-color: white;
 }
 
 .main-title {
     text-align: center;
     font-size: 38px;
     font-weight: 700;
-    color: #8a6d1d;
+    color: black;
     margin-bottom: 5px;
 }
 
 .subtitle {
     text-align: center;
     font-size: 17px;
-    color: #756b4d;
+    color: #444444;
     margin-bottom: 25px;
 }
 
 .section-title {
     font-size: 24px;
     font-weight: 650;
-    color: #8a6d1d;
-    border-bottom: 2px solid #f1df9a;
+    color: black;
+    border-bottom: 1px solid #dddddd;
     padding-bottom: 7px;
     margin-top: 25px;
 }
 
-.info-card {
-    background-color: #fffaf0;
-    border: 1px solid #f1df9a;
-    border-left: 4px solid #e8c95b;
-    border-radius: 10px;
-    padding: 18px;
-    color: #665b3c;
-}
-
 section[data-testid="stSidebar"] {
-    background-color: #fffaf0;
-    border-right: 1px solid #f1df9a;
+    background-color: white;
+    border-right: 1px solid #dddddd;
 }
 
 section[data-testid="stSidebar"] * {
-    color: #665b3c !important;
+    color: #222222 !important;
 }
 
 div[data-testid="stMetric"] {
-    background-color: #fffaf0;
-    border: 1px solid #f1df9a;
-    border-radius: 10px;
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
     padding: 12px;
     transition: transform 0.2s;
 }
 
 div[data-testid="stMetric"]:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
 div[data-testid="stMetricValue"] {
-    color: #8a6d1d !important;
+    color: black !important;
 }
 
 div[data-testid="stMetricLabel"] {
-    color: #756b4d !important;
+    color: #444444 !important;
 }
 
 [data-testid="stDataFrame"] {
-    border: 1px solid #f1df9a;
-    border-radius: 8px;
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
 }
 
 [data-testid="stFileUploader"] {
-    background-color: #fffaf0;
-    border: 1px solid #f1df9a;
-    border-radius: 8px;
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
 }
 
 div[data-baseweb="select"] > div {
-    background-color: #fffdf8;
-    border: 1px solid #e2cf86;
+    background-color: white;
+    border: 1px solid #cccccc;
 }
 
 .main-title {
-    animation: appear 0.8s ease-in;
+    animation: appear 0.7s ease-in;
 }
 
 .section-title {
-    animation: appear 0.6s ease-in;
+    animation: appear 0.5s ease-in;
 }
 
 @keyframes appear {
     from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-6px);
     }
 
     to {
@@ -148,7 +140,7 @@ st.markdown(
 )
 
 
-# Model files
+# Model information
 MODEL_DIR = "model"
 
 MODEL_FILES = {
@@ -160,7 +152,7 @@ MODEL_FILES = {
 }
 
 
-# Function to load model
+# Load model
 @st.cache_resource
 def load_model(path):
     return joblib.load(path)
@@ -197,7 +189,7 @@ if os.path.exists(metrics_path):
         unsafe_allow_html=True
     )
 
-    # Find best model
+    # Best model
     if "Accuracy" in metrics.columns:
 
         best = metrics.loc[
@@ -222,7 +214,7 @@ if os.path.exists(metrics_path):
         )
 
 
-    # Metrics table
+    # Model metrics table
     st.subheader("Model Metrics")
 
     st.dataframe(
@@ -232,7 +224,7 @@ if os.path.exists(metrics_path):
     )
 
 
-    # Accuracy graph
+    # Accuracy comparison
     if "Accuracy" in metrics.columns:
 
         st.subheader("Accuracy Comparison")
@@ -262,8 +254,7 @@ if os.path.exists(metrics_path):
     # Precision, Recall and F1
     performance_columns = [
         column
-        for column in
-        ["Precision", "Recall", "F1"]
+        for column in ["Precision", "Recall", "F1"]
         if column in metrics.columns
     ]
 
@@ -303,7 +294,7 @@ if os.path.exists(metrics_path):
         plt.close(fig)
 
 
-    # AUC graph
+    # AUC comparison
     if "AUC" in metrics.columns:
 
         st.subheader("AUC Comparison")
@@ -330,7 +321,7 @@ if os.path.exists(metrics_path):
         plt.close(fig)
 
 
-    # MCC graph
+    # MCC comparison
     if "MCC" in metrics.columns:
 
         st.subheader(
@@ -407,7 +398,7 @@ col3.metric(
 )
 
 
-# Prepare data
+# Prepare input data
 has_target = target in data.columns
 
 if has_target:
@@ -425,11 +416,11 @@ model_path = os.path.join(
 model = load_model(model_path)
 
 
-# Make predictions
+# Generate predictions
 pred = model.predict(X)
 
 
-# Prediction results
+# Display predictions
 st.markdown(
     '<div class="section-title">'
     'Literacy Level Predictions'
@@ -496,7 +487,7 @@ if has_target:
     )
 
 
-    # Evaluation metrics
+    # Evaluation results
     st.markdown(
         '<div class="section-title">'
         'Evaluation Results'
@@ -560,7 +551,7 @@ if has_target:
         cm,
         annot=True,
         fmt="d",
-        cmap="YlGnBu",
+        cmap="Blues",
         xticklabels=model.classes_,
         yticklabels=model.classes_,
         ax=ax
@@ -600,7 +591,7 @@ if has_target:
     )
 
 
-    # Actual vs predicted
+    # Actual versus predicted
     comparison = pd.DataFrame({
         "Actual": y_true.values,
         "Predicted": pred
@@ -643,7 +634,7 @@ st.markdown(
     <div style="
         text-align:center;
         padding:15px;
-        color:#9a8b63;
+        color:#555555;
     ">
         Literacy Level Classification System<br>
         Machine Learning Classification Project

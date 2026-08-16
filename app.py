@@ -32,30 +32,84 @@ st.markdown("""
     background-color: #f8fafc;
 }
 
+/* =========================
+   BLACK TITLES
+   ========================= */
+
 .main-title {
-    font-size: 38px;
-    font-weight: 700;
+    font-size: 40px;
+    font-weight: 800;
     text-align: center;
-    color: #334155;
-    margin-bottom: 5px;
+    color: #000000 !important;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    animation: fadeDown 0.9s ease-out;
 }
 
 .subtitle {
     text-align: center;
     font-size: 17px;
-    color: #64748b;
+    color: #475569 !important;
     margin-bottom: 25px;
+    animation: fadeUp 1s ease-out;
 }
 
 .section-title {
     font-size: 25px;
-    font-weight: 650;
-    color: #475569;
+    font-weight: 750;
+    color: #000000 !important;
     margin-top: 28px;
     margin-bottom: 15px;
     padding-bottom: 8px;
     border-bottom: 2px solid #e2e8f0;
+    animation: fadeUp 0.7s ease-out;
 }
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4 {
+    color: #000000 !important;
+}
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes softPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.015);
+    }
+}
+
+/* =========================
+   INFO CARD
+   ========================= */
 
 .info-card {
     background-color: white;
@@ -64,8 +118,13 @@ st.markdown("""
     border: 1px solid #e2e8f0;
     border-left: 4px solid #cbd5e1;
     box-shadow: 0 2px 8px rgba(15,23,42,0.05);
-    color: #475569;
+    color: #334155;
+    animation: fadeUp 0.8s ease-out;
 }
+
+/* =========================
+   SIDEBAR
+   ========================= */
 
 section[data-testid="stSidebar"] {
     background-color: #f8fafc;
@@ -73,14 +132,27 @@ section[data-testid="stSidebar"] {
 }
 
 section[data-testid="stSidebar"] * {
-    color: #475569 !important;
+    color: #000000 !important;
 }
+
+/* =========================
+   METRIC CARDS
+   ========================= */
 
 div[data-testid="stMetric"] {
     background-color: white;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 14px;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+    transition: all 0.25s ease;
+    animation: fadeUp 0.7s ease-out;
+}
+
+div[data-testid="stMetric"]:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 7px 18px rgba(15,23,42,0.10);
+    border-color: #cbd5e1;
 }
 
 div[data-testid="stMetricLabel"] {
@@ -88,20 +160,34 @@ div[data-testid="stMetricLabel"] {
 }
 
 div[data-testid="stMetricValue"] {
-    color: #334155 !important;
+    color: #000000 !important;
 }
+
+/* =========================
+   DATA TABLES
+   ========================= */
 
 [data-testid="stDataFrame"] {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     overflow: hidden;
+    background-color: white;
+    animation: fadeUp 0.6s ease-out;
 }
 
-[ data-testid="stFileUploader"] {
+/* =========================
+   FILE UPLOADER
+   ========================= */
+
+[data-testid="stFileUploader"] {
     background-color: white;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
 }
+
+/* =========================
+   SELECT BOX
+   ========================= */
 
 div[data-baseweb="select"] > div {
     background-color: white;
@@ -109,12 +195,40 @@ div[data-baseweb="select"] > div {
     border-radius: 8px;
 }
 
+/* =========================
+   BUTTON
+   ========================= */
+
 .stButton > button {
     background-color: white;
-    color: #475569;
+    color: #000000;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
     font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.stButton > button:hover {
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15,23,42,0.08);
+}
+
+/* =========================
+   ALERTS
+   ========================= */
+
+div[data-testid="stAlert"] {
+    border-radius: 10px;
+}
+
+/* =========================
+   PLOT ANIMATION
+   ========================= */
+
+[data-testid="stImage"],
+[data-testid="stPyplotGraph"] {
+    animation: fadeUp 0.9s ease-out;
 }
 
 </style>
@@ -136,6 +250,12 @@ st.markdown(
     '</div>',
     unsafe_allow_html=True
 )
+
+# Small visual loading animation
+progress = st.progress(0)
+for value in range(0, 101, 20):
+    progress.progress(value)
+progress.empty()
 
 st.markdown("""
 <div class="info-card">

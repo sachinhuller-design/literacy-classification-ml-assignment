@@ -17,14 +17,13 @@ from sklearn.metrics import (
 )
 
 
-# Page settings
 st.set_page_config(
     page_title="Literacy Classification",
     layout="wide"
 )
 
 
-# Page design
+# Page styling
 st.markdown("""
 <style>
 
@@ -33,34 +32,38 @@ st.markdown("""
     color: #000000;
 }
 
+
 /* Main title */
 .main-title {
     text-align: center;
     font-size: 38px;
     font-weight: 700;
-    color: #000000 !important;
+    color: #8a6d1d !important;
     margin-top: 15px;
     margin-bottom: 5px;
 }
+
 
 /* Subtitle */
 .subtitle {
     text-align: center;
     font-size: 17px;
-    color: #444444 !important;
+    color: #555555 !important;
     margin-bottom: 30px;
 }
 
-/* Section headings */
+
+/* Section titles */
 .section-title {
     font-size: 24px;
     font-weight: 700;
-    color: #000000 !important;
-    border-bottom: 1px solid #dddddd;
+    color: #8a6d1d !important;
+    border-bottom: 1px solid #eadfba;
     padding-bottom: 8px;
     margin-top: 28px;
     margin-bottom: 15px;
 }
+
 
 /* Normal headings */
 .stApp h1,
@@ -69,13 +72,14 @@ st.markdown("""
 .stApp h4,
 .stApp h5,
 .stApp h6 {
-    color: #000000 !important;
+    color: #8a6d1d !important;
 }
+
 
 /* Sidebar */
 section[data-testid="stSidebar"] {
     background-color: #ffffff !important;
-    border-right: 1px solid #dddddd;
+    border-right: 1px solid #e5e5e5;
 }
 
 section[data-testid="stSidebar"] h1,
@@ -85,15 +89,17 @@ section[data-testid="stSidebar"] label {
     color: #000000 !important;
 }
 
-/* Select box */
+
+/* Model selection */
 div[data-baseweb="select"] {
-    background-color: #ffffff !important;
+    background-color: #fff9df !important;
 }
 
 div[data-baseweb="select"] > div {
-    background-color: #ffffff !important;
-    border: 1px solid #cccccc !important;
+    background-color: #fff9df !important;
+    border: 1px solid #e4cf75 !important;
     color: #000000 !important;
+    border-radius: 8px !important;
 }
 
 div[data-baseweb="select"] span {
@@ -104,31 +110,51 @@ div[data-baseweb="select"] input {
     color: #000000 !important;
 }
 
-/* Dropdown */
+
+/* Dropdown options */
 ul[data-testid="stSelectboxVirtualDropdown"] {
-    background-color: #ffffff !important;
+    background-color: #fffdf0 !important;
 }
 
 ul[data-testid="stSelectboxVirtualDropdown"] li {
+    background-color: #fffdf0 !important;
     color: #000000 !important;
-    background-color: #ffffff !important;
 }
+
+ul[data-testid="stSelectboxVirtualDropdown"] li:hover {
+    background-color: #fff4c2 !important;
+}
+
 
 /* File uploader */
 [data-testid="stFileUploader"] {
-    background-color: #ffffff !important;
-    border: 1px solid #cccccc !important;
-    border-radius: 6px;
+    background-color: #fff9df !important;
+    border: 1px solid #e4cf75 !important;
+    border-radius: 8px !important;
 }
 
 [data-testid="stFileUploader"] * {
     color: #000000 !important;
 }
 
+[data-testid="stFileUploaderDropzone"] {
+    background-color: #fff9df !important;
+    border: none !important;
+}
+
+
+/* Upload button */
+[data-testid="stFileUploader"] button {
+    background-color: #fff4c2 !important;
+    color: #000000 !important;
+    border: 1px solid #dfc65f !important;
+}
+
+
 /* Metric boxes */
 div[data-testid="stMetric"] {
     background-color: #ffffff !important;
-    border: 1px solid #dddddd !important;
+    border: 1px solid #e1e1e1 !important;
     border-radius: 8px;
     padding: 14px;
     transition: transform 0.2s;
@@ -139,35 +165,39 @@ div[data-testid="stMetric"]:hover {
 }
 
 div[data-testid="stMetricLabel"] {
-    color: #444444 !important;
+    color: #555555 !important;
 }
 
 div[data-testid="stMetricValue"] {
     color: #000000 !important;
 }
 
-/* Tables */
+
+/* Data tables */
 [data-testid="stDataFrame"] {
     background-color: #ffffff !important;
     border: 1px solid #dddddd !important;
     border-radius: 6px;
 }
 
+
 /* Buttons */
 .stButton button {
-    background-color: #ffffff !important;
+    background-color: #fff9df !important;
     color: #000000 !important;
-    border: 1px solid #cccccc !important;
+    border: 1px solid #e4cf75 !important;
 }
 
-/* Messages */
+
+/* Information messages */
 [data-testid="stAlert"] {
-    background-color: #ffffff !important;
+    background-color: #fffdf0 !important;
     color: #000000 !important;
-    border: 1px solid #dddddd;
+    border: 1px solid #eadfba !important;
 }
 
-/* Animation */
+
+/* Simple animation */
 .main-title {
     animation: appear 0.7s ease-in;
 }
@@ -177,6 +207,7 @@ div[data-testid="stMetricValue"] {
 }
 
 @keyframes appear {
+
     from {
         opacity: 0;
         transform: translateY(-6px);
@@ -186,13 +217,14 @@ div[data-testid="stMetricValue"] {
         opacity: 1;
         transform: translateY(0);
     }
+
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# Title
+# Application title
 st.markdown(
     '<div class="main-title">Literacy Level Classification</div>',
     unsafe_allow_html=True
@@ -218,7 +250,7 @@ MODEL_FILES = {
 }
 
 
-# Load trained model
+# Model loading function
 @st.cache_resource
 def load_model(path):
     return joblib.load(path)
@@ -255,7 +287,6 @@ if os.path.exists(metrics_path):
         unsafe_allow_html=True
     )
 
-    # Best model
     if "Accuracy" in metrics.columns:
 
         best = metrics.loc[
@@ -280,9 +311,11 @@ if os.path.exists(metrics_path):
         )
 
 
-    # Model metrics table
+    # Model metrics
     st.markdown(
-        '<div class="section-title">Model Metrics</div>',
+        '<div class="section-title">'
+        'Model Metrics'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -293,7 +326,7 @@ if os.path.exists(metrics_path):
     )
 
 
-    # Accuracy comparison
+    # Accuracy graph
     if "Accuracy" in metrics.columns:
 
         st.markdown(
@@ -322,6 +355,7 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
+
         plt.close(fig)
 
 
@@ -372,10 +406,11 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
+
         plt.close(fig)
 
 
-    # AUC comparison
+    # AUC graph
     if "AUC" in metrics.columns:
 
         st.markdown(
@@ -404,10 +439,11 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
+
         plt.close(fig)
 
 
-    # MCC comparison
+    # MCC graph
     if "MCC" in metrics.columns:
 
         st.markdown(
@@ -435,6 +471,7 @@ if os.path.exists(metrics_path):
         plt.tight_layout()
 
         st.pyplot(fig)
+
         plt.close(fig)
 
 
@@ -477,8 +514,8 @@ col1.metric(
 
 col2.metric(
     "Features",
-    data.shape[1] -
-    (1 if target in data.columns else 0)
+    data.shape[1]
+    - (1 if target in data.columns else 0)
 )
 
 col3.metric(
@@ -487,7 +524,7 @@ col3.metric(
 )
 
 
-# Prepare data
+# Prepare input data
 has_target = target in data.columns
 
 if has_target:
@@ -505,7 +542,7 @@ model_path = os.path.join(
 model = load_model(model_path)
 
 
-# Make predictions
+# Generate predictions
 pred = model.predict(X)
 
 
@@ -642,7 +679,7 @@ if has_target:
         cm,
         annot=True,
         fmt="d",
-        cmap="Blues",
+        cmap="YlOrBr",
         xticklabels=model.classes_,
         yticklabels=model.classes_,
         ax=ax
@@ -654,6 +691,7 @@ if has_target:
     plt.tight_layout()
 
     st.pyplot(fig)
+
     plt.close(fig)
 
 
@@ -682,7 +720,7 @@ if has_target:
     )
 
 
-    # Actual versus predicted
+    # Actual vs predicted
     comparison = pd.DataFrame({
         "Actual": y_true.values,
         "Predicted": pred
@@ -725,7 +763,7 @@ st.markdown(
     <div style="
         text-align:center;
         padding:15px;
-        color:#555555;
+        color:#777777;
     ">
         Literacy Level Classification System<br>
         Machine Learning Classification Project

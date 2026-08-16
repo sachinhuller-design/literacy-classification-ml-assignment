@@ -65,17 +65,6 @@ st.markdown("""
 }
 
 
-/* Normal headings */
-.stApp h1,
-.stApp h2,
-.stApp h3,
-.stApp h4,
-.stApp h5,
-.stApp h6 {
-    color: #8a6d1d !important;
-}
-
-
 /* Sidebar */
 section[data-testid="stSidebar"] {
     background-color: #ffffff !important;
@@ -197,7 +186,7 @@ div[data-testid="stMetricValue"] {
 }
 
 
-/* Animation */
+/* Simple animation */
 .main-title {
     animation: appear 0.7s ease-in;
 }
@@ -300,34 +289,29 @@ if os.path.exists(metrics_path):
         with col1:
 
             st.markdown(
-                f"""
-                <div style="
-                    background-color:#ffffff;
-                    border:1px solid #d9d9d9;
-                    border-radius:8px;
-                    padding:18px;
-                    height:100px;
-                ">
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:16px;
-                        font-weight:500;
-                        margin-bottom:10px;
-                    ">
-                        Best Model
-                    </div>
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:28px;
-                        font-weight:600;
-                    ">
-                        {best["Model"]}
-                    </div>
-
-                </div>
-                """,
+                '<div style="'
+                'background-color:#ffffff;'
+                'border:1px solid #d9d9d9;'
+                'border-radius:8px;'
+                'padding:18px;'
+                'height:100px;'
+                '">'
+                '<div style="'
+                'color:#000000;'
+                'font-size:16px;'
+                'font-weight:500;'
+                'margin-bottom:10px;'
+                '">'
+                'Best Model'
+                '</div>'
+                '<div style="'
+                'color:#000000;'
+                'font-size:28px;'
+                'font-weight:600;'
+                '">'
+                + str(best["Model"])
+                + '</div>'
+                '</div>',
                 unsafe_allow_html=True
             )
 
@@ -336,34 +320,29 @@ if os.path.exists(metrics_path):
         with col2:
 
             st.markdown(
-                f"""
-                <div style="
-                    background-color:#ffffff;
-                    border:1px solid #d9d9d9;
-                    border-radius:8px;
-                    padding:18px;
-                    height:100px;
-                ">
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:16px;
-                        font-weight:500;
-                        margin-bottom:10px;
-                    ">
-                        Best Accuracy
-                    </div>
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:28px;
-                        font-weight:600;
-                    ">
-                        {best["Accuracy"]:.4f}
-                    </div>
-
-                </div>
-                """,
+                '<div style="'
+                'background-color:#ffffff;'
+                'border:1px solid #d9d9d9;'
+                'border-radius:8px;'
+                'padding:18px;'
+                'height:100px;'
+                '">'
+                '<div style="'
+                'color:#000000;'
+                'font-size:16px;'
+                'font-weight:500;'
+                'margin-bottom:10px;'
+                '">'
+                'Best Accuracy'
+                '</div>'
+                '<div style="'
+                'color:#000000;'
+                'font-size:28px;'
+                'font-weight:600;'
+                '">'
+                + f'{best["Accuracy"]:.4f}'
+                + '</div>'
+                '</div>',
                 unsafe_allow_html=True
             )
 
@@ -372,34 +351,29 @@ if os.path.exists(metrics_path):
         with col3:
 
             st.markdown(
-                f"""
-                <div style="
-                    background-color:#ffffff;
-                    border:1px solid #d9d9d9;
-                    border-radius:8px;
-                    padding:18px;
-                    height:100px;
-                ">
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:16px;
-                        font-weight:500;
-                        margin-bottom:10px;
-                    ">
-                        Number of Models
-                    </div>
-
-                    <div style="
-                        color:#000000 !important;
-                        font-size:28px;
-                        font-weight:600;
-                    ">
-                        {len(metrics)}
-                    </div>
-
-                </div>
-                """,
+                '<div style="'
+                'background-color:#ffffff;'
+                'border:1px solid #d9d9d9;'
+                'border-radius:8px;'
+                'padding:18px;'
+                'height:100px;'
+                '">'
+                '<div style="'
+                'color:#000000;'
+                'font-size:16px;'
+                'font-weight:500;'
+                'margin-bottom:10px;'
+                '">'
+                'Number of Models'
+                '</div>'
+                '<div style="'
+                'color:#000000;'
+                'font-size:28px;'
+                'font-weight:600;'
+                '">'
+                + str(len(metrics))
+                + '</div>'
+                '</div>',
                 unsafe_allow_html=True
             )
 
@@ -619,10 +593,13 @@ col3.metric(
 has_target = target in data.columns
 
 if has_target:
+
     X = data.drop(
         columns=[target]
     )
+
 else:
+
     X = data.copy()
 
 
@@ -668,6 +645,7 @@ if has_target:
     ).astype(str).values
 
     probability = model.predict_proba(X)
+
 
     accuracy = accuracy_score(
         y_true,
@@ -852,15 +830,11 @@ else:
 st.markdown("---")
 
 st.markdown(
-    """
-    <div style="
-        text-align:center;
-        padding:15px;
-        color:#777777;
-    ">
-        Literacy Level Classification System<br>
-        Machine Learning Classification Project
-    </div>
-    """,
+    '<div style="text-align:center;'
+    'padding:15px;'
+    'color:#777777;">'
+    'Literacy Level Classification System<br>'
+    'Machine Learning Classification Project'
+    '</div>',
     unsafe_allow_html=True
 )

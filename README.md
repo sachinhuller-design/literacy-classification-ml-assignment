@@ -13,7 +13,7 @@ The project uses an education/student-performance dataset concept from Kaggle as
 **Important:** `literacy_classification.csv` in this package is a **prepared/derived learning dataset**, not the original Kaggle download. The target `Literacy_Level` is constructed from reading performance:
 
 - Low: reading score < 60
-- Medium: 60–79.99
+- Medium: 60-79.99
 - High: >= 80
 
 The final prepared file contains **1,000 rows, 13 input features and 1 target column**. The reading score itself is intentionally not used as an input feature to avoid direct target leakage.
@@ -36,20 +36,20 @@ https://literacy-level-classification.streamlit.app/
 
 ```text
 literacy_classification_project/
-├── app.py
-├── train_models.py
-├── requirements.txt
-├── README.md
-├── literacy_classification.csv
-├── test_data.csv
-├── model_metrics.csv
-└── model/
-    ├── logistic_regression.joblib
-    ├── decision_tree.joblib
-    ├── knn.joblib
-    ├── naive_bayes.joblib
-    ├── random_forest.joblib
-    └── metrics.csv
+ app.py
+ train_models.py
+ requirements.txt
+ README.md
+ literacy_classification.csv
+ test_data.csv
+ model_metrics.csv
+ model/
+     logistic_regression.joblib
+     decision_tree.joblib
+     knn.joblib
+     naive_bayes.joblib
+     random_forest.joblib
+     metrics.csv
 ```
 
 ## 4. Models used
@@ -102,19 +102,19 @@ The Streamlit application also identifies **Decision Tree** as the best model wi
 
 ## 6. How to run
 
-### Step 1 – Install packages
+### Step 1 - Install packages
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 2 – Train and save models
+### Step 2 - Train and save models
 
 ```bash
 python train_models.py
 ```
 
-### Step 3 – Start Streamlit locally
+### Step 3 - Start Streamlit locally
 
 ```bash
 streamlit run app.py
@@ -156,3 +156,4 @@ The upload section is intended for test data, consistent with the assignment req
 Five classification algorithms were trained and evaluated on the prepared literacy-classification dataset using six required evaluation metrics.
 
 Among the tested models, the **Decision Tree performed best in the latest run**, achieving **87% accuracy** and the highest MCC score of **0.7153**. Therefore, Decision Tree is selected as the overall winner for this dataset and is also identified as the best model by the Streamlit application.
+

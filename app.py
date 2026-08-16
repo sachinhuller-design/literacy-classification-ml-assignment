@@ -151,7 +151,7 @@ ul[data-testid="stSelectboxVirtualDropdown"] li:hover {
 }
 
 
-/* Metric boxes */
+/* Normal metric boxes */
 div[data-testid="stMetric"] {
     background-color: #ffffff !important;
     border: 1px solid #e1e1e1 !important;
@@ -165,7 +165,7 @@ div[data-testid="stMetric"]:hover {
 }
 
 div[data-testid="stMetricLabel"] {
-    color: #555555 !important;
+    color: #000000 !important;
 }
 
 div[data-testid="stMetricValue"] {
@@ -197,7 +197,7 @@ div[data-testid="stMetricValue"] {
 }
 
 
-/* Simple animation */
+/* Animation */
 .main-title {
     animation: appear 0.7s ease-in;
 }
@@ -250,7 +250,7 @@ MODEL_FILES = {
 }
 
 
-# Model loading function
+# Load model
 @st.cache_resource
 def load_model(path):
     return joblib.load(path)
@@ -295,20 +295,113 @@ if os.path.exists(metrics_path):
 
         col1, col2, col3 = st.columns(3)
 
-        col1.metric(
-            "Best Model",
-            best["Model"]
-        )
 
-        col2.metric(
-            "Best Accuracy",
-            f'{best["Accuracy"]:.4f}'
-        )
+        # Best Model
+        with col1:
 
-        col3.metric(
-            "Number of Models",
-            len(metrics)
-        )
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #d9d9d9;
+                    border-radius:8px;
+                    padding:18px;
+                    height:100px;
+                ">
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:16px;
+                        font-weight:500;
+                        margin-bottom:10px;
+                    ">
+                        Best Model
+                    </div>
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:28px;
+                        font-weight:600;
+                    ">
+                        {best["Model"]}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+        # Best Accuracy
+        with col2:
+
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #d9d9d9;
+                    border-radius:8px;
+                    padding:18px;
+                    height:100px;
+                ">
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:16px;
+                        font-weight:500;
+                        margin-bottom:10px;
+                    ">
+                        Best Accuracy
+                    </div>
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:28px;
+                        font-weight:600;
+                    ">
+                        {best["Accuracy"]:.4f}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+        # Number of Models
+        with col3:
+
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #d9d9d9;
+                    border-radius:8px;
+                    padding:18px;
+                    height:100px;
+                ">
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:16px;
+                        font-weight:500;
+                        margin-bottom:10px;
+                    ">
+                        Number of Models
+                    </div>
+
+                    <div style="
+                        color:#000000 !important;
+                        font-size:28px;
+                        font-weight:600;
+                    ">
+                        {len(metrics)}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 
     # Model metrics
@@ -490,8 +583,7 @@ elif os.path.exists(default_file):
 else:
 
     st.error(
-        "test_data.csv was not found. "
-        "Please upload a CSV file."
+        "test_data.csv was not found. Please upload a CSV file."
     )
 
     st.stop()
@@ -514,8 +606,7 @@ col1.metric(
 
 col2.metric(
     "Features",
-    data.shape[1]
-    - (1 if target in data.columns else 0)
+    data.shape[1] - (1 if target in data.columns else 0)
 )
 
 col3.metric(
@@ -528,7 +619,9 @@ col3.metric(
 has_target = target in data.columns
 
 if has_target:
-    X = data.drop(columns=[target])
+    X = data.drop(
+        columns=[target]
+    )
 else:
     X = data.copy()
 
@@ -720,7 +813,7 @@ if has_target:
     )
 
 
-    # Actual vs predicted
+    # Actual vs Predicted
     comparison = pd.DataFrame({
         "Actual": y_true.values,
         "Predicted": pred

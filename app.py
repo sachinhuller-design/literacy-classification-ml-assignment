@@ -165,7 +165,7 @@ div[data-testid="stMetric"]:hover {
 }
 
 div[data-testid="stMetricLabel"] {
-    color: #555555 !important;
+    color: #000000 !important;
 }
 
 div[data-testid="stMetricValue"] {
@@ -197,7 +197,7 @@ div[data-testid="stMetricValue"] {
 }
 
 
-/* Simple animation */
+/* Animation */
 .main-title {
     animation: appear 0.7s ease-in;
 }
@@ -224,7 +224,7 @@ div[data-testid="stMetricValue"] {
 """, unsafe_allow_html=True)
 
 
-# Application title
+# Main title
 st.markdown(
     '<div class="main-title">Literacy Level Classification</div>',
     unsafe_allow_html=True
@@ -250,7 +250,7 @@ MODEL_FILES = {
 }
 
 
-# Model loading function
+# Load model
 @st.cache_resource
 def load_model(path):
     return joblib.load(path)
@@ -270,7 +270,7 @@ uploaded = st.sidebar.file_uploader(
 )
 
 
-# Model comparison
+# Read model metrics
 metrics_path = os.path.join(
     MODEL_DIR,
     "metrics.csv"
@@ -287,6 +287,8 @@ if os.path.exists(metrics_path):
         unsafe_allow_html=True
     )
 
+
+    # Best model information
     if "Accuracy" in metrics.columns:
 
         best = metrics.loc[
@@ -295,23 +297,113 @@ if os.path.exists(metrics_path):
 
         col1, col2, col3 = st.columns(3)
 
-        col1.metric(
-            "Best Model",
-            best["Model"]
-        )
 
-        col2.metric(
-            "Best Accuracy",
-            f'{best["Accuracy"]:.4f}'
-        )
+        # Best model
+        with col1:
 
-        col3.metric(
-            "Number of Models",
-            len(metrics)
-        )
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #dddddd;
+                    border-radius:8px;
+                    padding:18px;
+                    min-height:100px;
+                ">
+
+                    <div style="
+                        color:#000000;
+                        font-size:16px;
+                        margin-bottom:8px;
+                    ">
+                        Best Model
+                    </div>
+
+                    <div style="
+                        color:#000000;
+                        font-size:30px;
+                        font-weight:500;
+                    ">
+                        {best["Model"]}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 
-    # Model metrics
+        # Best accuracy
+        with col2:
+
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #dddddd;
+                    border-radius:8px;
+                    padding:18px;
+                    min-height:100px;
+                ">
+
+                    <div style="
+                        color:#000000;
+                        font-size:16px;
+                        margin-bottom:8px;
+                    ">
+                        Best Accuracy
+                    </div>
+
+                    <div style="
+                        color:#000000;
+                        font-size:30px;
+                        font-weight:500;
+                    ">
+                        {best["Accuracy"]:.4f}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+        # Number of models
+        with col3:
+
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#ffffff;
+                    border:1px solid #dddddd;
+                    border-radius:8px;
+                    padding:18px;
+                    min-height:100px;
+                ">
+
+                    <div style="
+                        color:#000000;
+                        font-size:16px;
+                        margin-bottom:8px;
+                    ">
+                        Number of Models
+                    </div>
+
+                    <div style="
+                        color:#000000;
+                        font-size:30px;
+                        font-weight:500;
+                    ">
+                        {len(metrics)}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+    # Metrics table
     st.markdown(
         '<div class="section-title">'
         'Model Metrics'
@@ -326,7 +418,7 @@ if os.path.exists(metrics_path):
     )
 
 
-    # Accuracy graph
+    # Accuracy comparison
     if "Accuracy" in metrics.columns:
 
         st.markdown(
@@ -336,9 +428,7 @@ if os.path.exists(metrics_path):
             unsafe_allow_html=True
         )
 
-        fig, ax = plt.subplots(
-            figsize=(10, 5)
-        )
+        fig, ax = plt.subplots(figsize=(10, 5))
 
         sns.barplot(
             data=metrics,
@@ -360,17 +450,13 @@ if os.path.exists(metrics_path):
 
 
     # Precision, Recall and F1
-    performance_columns = [
-        column
-        for column in [
-            "Precision",
-            "Recall",
-            "F1"
-        ]
-        if column in metrics.columns
+    score_columns = [
+        c for c in
+        ["Precision", "Recall", "F1"]
+        if c in metrics.columns
     ]
 
-    if performance_columns:
+    if score_columns:
 
         st.markdown(
             '<div class="section-title">'
@@ -381,14 +467,12 @@ if os.path.exists(metrics_path):
 
         plot_data = metrics.melt(
             id_vars="Model",
-            value_vars=performance_columns,
+            value_vars=score_columns,
             var_name="Metric",
             value_name="Score"
         )
 
-        fig, ax = plt.subplots(
-            figsize=(11, 6)
-        )
+        fig, ax = plt.subplots(figsize=(11, 6))
 
         sns.barplot(
             data=plot_data,
@@ -410,7 +494,7 @@ if os.path.exists(metrics_path):
         plt.close(fig)
 
 
-    # AUC graph
+    # AUC comparison
     if "AUC" in metrics.columns:
 
         st.markdown(
@@ -420,9 +504,7 @@ if os.path.exists(metrics_path):
             unsafe_allow_html=True
         )
 
-        fig, ax = plt.subplots(
-            figsize=(10, 5)
-        )
+        fig, ax = plt.subplots(figsize=(10, 5))
 
         sns.barplot(
             data=metrics,
@@ -443,7 +525,7 @@ if os.path.exists(metrics_path):
         plt.close(fig)
 
 
-    # MCC graph
+    # MCC comparison
     if "MCC" in metrics.columns:
 
         st.markdown(
@@ -453,9 +535,7 @@ if os.path.exists(metrics_path):
             unsafe_allow_html=True
         )
 
-        fig, ax = plt.subplots(
-            figsize=(10, 5)
-        )
+        fig, ax = plt.subplots(figsize=(10, 5))
 
         sns.barplot(
             data=metrics,
@@ -475,7 +555,7 @@ if os.path.exists(metrics_path):
         plt.close(fig)
 
 
-# Load test data
+# Test data
 target = "Literacy_Level"
 default_file = "test_data.csv"
 
@@ -490,8 +570,7 @@ elif os.path.exists(default_file):
 else:
 
     st.error(
-        "test_data.csv was not found. "
-        "Please upload a CSV file."
+        "test_data.csv was not found. Please upload a CSV file."
     )
 
     st.stop()
@@ -514,8 +593,7 @@ col1.metric(
 
 col2.metric(
     "Features",
-    data.shape[1]
-    - (1 if target in data.columns else 0)
+    data.shape[1] - (1 if target in data.columns else 0)
 )
 
 col3.metric(
@@ -524,12 +602,17 @@ col3.metric(
 )
 
 
-# Prepare input data
+# Prepare data
 has_target = target in data.columns
 
 if has_target:
-    X = data.drop(columns=[target])
+
+    X = data.drop(
+        columns=[target]
+    )
+
 else:
+
     X = data.copy()
 
 
@@ -576,6 +659,7 @@ if has_target:
 
     probability = model.predict_proba(X)
 
+
     accuracy = accuracy_score(
         y_true,
         pred
@@ -615,7 +699,7 @@ if has_target:
     )
 
 
-    # Evaluation results
+    # Evaluation metrics
     st.markdown(
         '<div class="section-title">'
         'Evaluation Results'

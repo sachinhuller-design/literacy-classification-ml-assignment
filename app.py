@@ -29,47 +29,108 @@ st.markdown("""
 <style>
 
 .stApp {
-    background-color: white;
+    background-color: #ffffff;
+    color: #000000;
 }
 
+/* Main title */
 .main-title {
     text-align: center;
     font-size: 38px;
     font-weight: 700;
-    color: black;
+    color: #000000 !important;
+    margin-top: 15px;
     margin-bottom: 5px;
 }
 
+/* Subtitle */
 .subtitle {
     text-align: center;
     font-size: 17px;
-    color: #444444;
-    margin-bottom: 25px;
+    color: #444444 !important;
+    margin-bottom: 30px;
 }
 
+/* Section headings */
 .section-title {
     font-size: 24px;
-    font-weight: 650;
-    color: black;
+    font-weight: 700;
+    color: #000000 !important;
     border-bottom: 1px solid #dddddd;
-    padding-bottom: 7px;
-    margin-top: 25px;
+    padding-bottom: 8px;
+    margin-top: 28px;
+    margin-bottom: 15px;
 }
 
+/* Normal headings */
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4,
+.stApp h5,
+.stApp h6 {
+    color: #000000 !important;
+}
+
+/* Sidebar */
 section[data-testid="stSidebar"] {
-    background-color: white;
+    background-color: #ffffff !important;
     border-right: 1px solid #dddddd;
 }
 
-section[data-testid="stSidebar"] * {
-    color: #222222 !important;
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] label {
+    color: #000000 !important;
 }
 
+/* Select box */
+div[data-baseweb="select"] {
+    background-color: #ffffff !important;
+}
+
+div[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #000000 !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #000000 !important;
+}
+
+div[data-baseweb="select"] input {
+    color: #000000 !important;
+}
+
+/* Dropdown */
+ul[data-testid="stSelectboxVirtualDropdown"] {
+    background-color: #ffffff !important;
+}
+
+ul[data-testid="stSelectboxVirtualDropdown"] li {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] {
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 6px;
+}
+
+[data-testid="stFileUploader"] * {
+    color: #000000 !important;
+}
+
+/* Metric boxes */
 div[data-testid="stMetric"] {
-    background-color: white;
-    border: 1px solid #dddddd;
+    background-color: #ffffff !important;
+    border: 1px solid #dddddd !important;
     border-radius: 8px;
-    padding: 12px;
+    padding: 14px;
     transition: transform 0.2s;
 }
 
@@ -77,31 +138,36 @@ div[data-testid="stMetric"]:hover {
     transform: translateY(-2px);
 }
 
-div[data-testid="stMetricValue"] {
-    color: black !important;
-}
-
 div[data-testid="stMetricLabel"] {
     color: #444444 !important;
 }
 
+div[data-testid="stMetricValue"] {
+    color: #000000 !important;
+}
+
+/* Tables */
 [data-testid="stDataFrame"] {
-    background-color: white;
-    border: 1px solid #dddddd;
+    background-color: #ffffff !important;
+    border: 1px solid #dddddd !important;
     border-radius: 6px;
 }
 
-[data-testid="stFileUploader"] {
-    background-color: white;
+/* Buttons */
+.stButton button {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+}
+
+/* Messages */
+[data-testid="stAlert"] {
+    background-color: #ffffff !important;
+    color: #000000 !important;
     border: 1px solid #dddddd;
-    border-radius: 6px;
 }
 
-div[data-baseweb="select"] > div {
-    background-color: white;
-    border: 1px solid #cccccc;
-}
-
+/* Animation */
 .main-title {
     animation: appear 0.7s ease-in;
 }
@@ -140,7 +206,7 @@ st.markdown(
 )
 
 
-# Model information
+# Model files
 MODEL_DIR = "model"
 
 MODEL_FILES = {
@@ -152,7 +218,7 @@ MODEL_FILES = {
 }
 
 
-# Load model
+# Load trained model
 @st.cache_resource
 def load_model(path):
     return joblib.load(path)
@@ -215,7 +281,10 @@ if os.path.exists(metrics_path):
 
 
     # Model metrics table
-    st.subheader("Model Metrics")
+    st.markdown(
+        '<div class="section-title">Model Metrics</div>',
+        unsafe_allow_html=True
+    )
 
     st.dataframe(
         metrics,
@@ -227,7 +296,12 @@ if os.path.exists(metrics_path):
     # Accuracy comparison
     if "Accuracy" in metrics.columns:
 
-        st.subheader("Accuracy Comparison")
+        st.markdown(
+            '<div class="section-title">'
+            'Accuracy Comparison'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
         fig, ax = plt.subplots(
             figsize=(10, 5)
@@ -254,14 +328,21 @@ if os.path.exists(metrics_path):
     # Precision, Recall and F1
     performance_columns = [
         column
-        for column in ["Precision", "Recall", "F1"]
+        for column in [
+            "Precision",
+            "Recall",
+            "F1"
+        ]
         if column in metrics.columns
     ]
 
     if performance_columns:
 
-        st.subheader(
-            "Precision, Recall and F1 Score"
+        st.markdown(
+            '<div class="section-title">'
+            'Precision, Recall and F1 Score'
+            '</div>',
+            unsafe_allow_html=True
         )
 
         plot_data = metrics.melt(
@@ -297,7 +378,12 @@ if os.path.exists(metrics_path):
     # AUC comparison
     if "AUC" in metrics.columns:
 
-        st.subheader("AUC Comparison")
+        st.markdown(
+            '<div class="section-title">'
+            'AUC Comparison'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
         fig, ax = plt.subplots(
             figsize=(10, 5)
@@ -324,8 +410,11 @@ if os.path.exists(metrics_path):
     # MCC comparison
     if "MCC" in metrics.columns:
 
-        st.subheader(
-            "Matthews Correlation Coefficient"
+        st.markdown(
+            '<div class="section-title">'
+            'Matthews Correlation Coefficient'
+            '</div>',
+            unsafe_allow_html=True
         )
 
         fig, ax = plt.subplots(
@@ -398,7 +487,7 @@ col3.metric(
 )
 
 
-# Prepare input data
+# Prepare data
 has_target = target in data.columns
 
 if has_target:
@@ -416,11 +505,11 @@ model_path = os.path.join(
 model = load_model(model_path)
 
 
-# Generate predictions
+# Make predictions
 pred = model.predict(X)
 
 
-# Display predictions
+# Prediction results
 st.markdown(
     '<div class="section-title">'
     'Literacy Level Predictions'
@@ -444,7 +533,9 @@ if has_target:
 
     y_true = data[target].astype(str)
 
-    pred = pd.Series(pred).astype(str).values
+    pred = pd.Series(
+        pred
+    ).astype(str).values
 
     probability = model.predict_proba(X)
 
